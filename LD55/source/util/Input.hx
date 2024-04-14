@@ -6,6 +6,13 @@ import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxDirectionFlags;
 
+enum InputSetup
+{
+	None;
+	TopDown;
+	Platformer;
+}
+
 /**
  * Input Manager for adding different key states
  * @author aeveis
@@ -26,6 +33,8 @@ class Input
 	public var lastPressed:Int = FlxDirectionFlags.NONE;
 
 	public var existingKey:String = null;
+	public var inputSetup:InputSetup = InputSetup.None;
+	public var upStickJumpDisabled = false;
 
 	public var any(get, null):Bool;
 
@@ -41,13 +50,6 @@ class Input
 		return up.justPressed || down.justPressed || left.justPressed || right.justPressed;
 	}
 
-	public var anyJustReleased(get, null):Bool;
-
-	function get_anyJustReleased()
-	{
-		return up.justReleased || down.justReleased || left.justReleased || right.justReleased;
-	}
-
 	public var noneX(get, null):Bool;
 
 	function get_noneX()
@@ -55,11 +57,32 @@ class Input
 		return (pressed == FlxDirectionFlags.NONE || pressed == FlxDirectionFlags.DOWN || pressed == FlxDirectionFlags.UP);
 	}
 
-	public var justUpDown(get, null):Bool;
+	public var pressedBothX(get, null):Bool;
 
-	function get_justUpDown()
+	function get_pressedBothX()
 	{
-		return up.justPressed || down.justPressed;
+		return left.pressed && right.pressed;
+	}
+
+	public var pressedBothY(get, null):Bool;
+
+	function get_pressedBothY()
+	{
+		return up.pressed && down.pressed;
+	}
+
+	public var anyUpDown(get, null):Bool;
+
+	function get_anyUpDown()
+	{
+		return up.pressed || down.pressed;
+	}
+
+	public var anyLeftRight(get, null):Bool;
+
+	function get_anyLeftRight()
+	{
+		return left.pressed || right.pressed;
 	}
 
 	public var none(get, null):Bool;
@@ -88,11 +111,15 @@ class Input
 
 	public static function switchToGamepad()
 	{
+		if (switchToGamepadCallback == null)
+			return;
 		switchToGamepadCallback();
 	}
 
 	public static function switchToKeyboard()
 	{
+		if (switchToKeysCallback == null)
+			return;
 		switchToKeysCallback();
 	}
 
@@ -278,16 +305,32 @@ class Input
 
 	public function topdownSetup()
 	{
+		inputSetup = InputSetup.TopDown;
 		updateInput(left, ["LEFT", "A"], ["DPAD_LEFT"]);
 		updateInput(right, ["RIGHT", "D"], ["DPAD_RIGHT"]);
 		updateInput(up, ["UP", "W"], ["DPAD_UP"]);
 		updateInput(down, ["DOWN", "S"], ["DPAD_DOWN"]);
 
-		addInput("select", ["X", "PERIOD", "SLASH"], ["A", "X"]);
+		addInput("select", ["X", "PERIOD", "SLASH"], ["A"]);
 		addInput("undo", ["Z", "E"], ["B"]);
 		addInput("pause", ["ENTER", "ESCAPE"], ["START"]);
 		addInput("restart", ["R"], ["LEFT_SHOULDER"]);
-		stickSensitivity = 0.75;
+	}
+
+	public function platformerSetup()
+	{
+		inputSetup = InputSetup.Platformer;
+		updateInput(left, ["LEFT", "A"], ["DPAD_LEFT"]);
+		updateInput(right, ["RIGHT", "D"], ["DPAD_RIGHT"]);
+		updateInput(up, ["UP", "W", "SPACE"], ["DPAD_UP", "X", "Y"]);
+		updateInput(down, ["DOWN", "S"], ["DPAD_DOWN"]);
+		upStickJumpDisabled = true;
+		refreshStick = false;
+
+		addInput("select", ["X", "PERIOD", "SLASH"], ["A"]);
+		addInput("action", ["Z", "E"], ["B"]);
+		addInput("pause", ["ENTER", "ESCAPE"], ["START"]);
+		addInput("restart", ["R"], ["LEFT_SHOULDER"]);
 	}
 
 	public function updateInput(p_input:InputState, p_keys:Array<FlxKey>, ?p_gamepads:Array<FlxGamepadInputID>)
@@ -510,6 +553,48 @@ class Input
 			keys.get(key).update(elapsed);
 		}
 
+		if(FlxG.mouse.justPressed)
+		{
+			
+			keys.get("select").justPressed = true;
+			
+			if(FlxG.mouse.x > FlxG.width/2.0)
+			{
+				right.justPressed = true;
+			}
+			else
+			{
+				left.justPressed = true;
+			}
+			if(FlxG.mouse.y < FlxG.height/2.0)
+			{
+				up.justPressed = true;
+			}
+			else
+			{
+				down.justPressed = true;
+			}
+		}
+		if(FlxG.mouse.pressed)
+		{
+			if(FlxG.mouse.x > FlxG.width/2.0)
+			{
+				right.pressed = true;
+			}
+			else
+			{
+				left.pressed = true;
+			}
+			if(FlxG.mouse.y < FlxG.height/2.0)
+			{
+				up.pressed = true;
+			}
+			else
+			{
+				down.pressed = true;
+			}
+		}
+
 		var gamepad = FlxG.gamepads.lastActive;
 		if (gamepad != null)
 		{
@@ -641,7 +726,9 @@ class Input
 					stickJustMovedY = true;
 				}
 				stickMovedY = true;
+
 				up.pressed = true;
+
 				if (refreshStick)
 				{
 					refreshStickCounter += elapsed;
@@ -651,13 +738,16 @@ class Input
 						stickJustMovedY = true;
 					}
 				}
-				if (stickJustMovedY)
+				if (!upStickJumpDisabled)
 				{
-					up.justPressed = true;
-				}
-				if (stickJustReleaseY)
-				{
-					up.justReleased = true;
+					if (stickJustMovedY)
+					{
+						up.justPressed = true;
+					}
+					if (stickJustReleaseY)
+					{
+						up.justReleased = true;
+					}
 				}
 			}
 
@@ -684,16 +774,5 @@ class Input
 			pressed |= FlxDirectionFlags.UP;
 		if (down.pressed)
 			pressed |= FlxDirectionFlags.DOWN;
-	}
-
-	public function destroy()
-	{
-		names = null;
-		for (key in keys)
-		{
-			key.destroy();
-			key == null;
-		}
-		keys.clear();
 	}
 }

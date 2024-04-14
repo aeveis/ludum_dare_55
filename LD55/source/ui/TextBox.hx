@@ -7,7 +7,6 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.text.FlxBitmapFont;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import global.G;
 import ui.Portrait;
 import util.Input;
 import util.InputState;
@@ -57,7 +56,7 @@ class TextBox extends UIImage
 		if (p_textZoom == _null)
 			p_textZoom = 1;
 		textZoomRatio = 1.0 / p_textZoom;
-		textCam = new FlxCamera(cast G.gameRect.x, cast G.gameRect.y, Math.floor((textBox.width + charBox.width) * textZoomRatio),
+		textCam = new FlxCamera(cast FlxG.camera.x, cast FlxG.camera.y, Math.floor((textBox.width + charBox.width) * textZoomRatio),
 			Math.floor(textBox.height * textZoomRatio), p_textZoom);
 		textCam.bgColor = 0;
 
@@ -237,8 +236,8 @@ class TextBox extends UIImage
 
 	private function refreshTextPlacement()
 	{
-		textCam.x = G.gameRect.x + textBox.x;
-		textCam.y = G.gameRect.y + textBox.y;
+		textCam.x = FlxG.camera.x + textBox.x;
+		textCam.y = FlxG.camera.y + textBox.y;
 		textBox.x = 0;
 		textBox.y = 0;
 	}
