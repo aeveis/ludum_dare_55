@@ -79,6 +79,12 @@ class TextTrigger extends FlxObject
 		cancelTimer = new FlxTimer();
 	}
 
+	public function setTextNode(ptextNode:TextNode)
+	{
+		textNode = ptextNode;
+		text = textNode.texts;
+	}
+
 	public function addCallback(index:Int, pcallback:Void->Void)
 	{
 		callbacks.set(index, pcallback);

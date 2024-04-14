@@ -21,7 +21,6 @@ enum PopupState
 	Shown;
 	Open;
 	Hide;
-	DelayedHide;
 	Notify;
 }
 
@@ -34,41 +33,32 @@ class TextPopup extends UIImage
 	private var startWidth:Float = 0;
 	private var offsetX:Float = 0;
 	private var offsetY:Float = 0;
-	private var appearY:Float = 32;
-	private var openY:Float = 10;
-	private var notifyY:Float = 12;
+	private var appearY:Float = 8;
+	private var openY:Float = 3;
+	private var notifyY:Float = 8;
 	private var animateTime:Float = 0.1;
 
 	private var read:Bool = false;
 	private var notifySet:Bool = false;
 
 	private var currentSelect:String = "X";
-	private var hideTimer:FlxTimer;
-	private var ratio:Float = 0;
-	private var showing:Bool = false;
 
 	public function new(px:Float, py:Float)
 	{
-		startWidth = 32;
-		super(AssetPaths.textpopup__png, UIPlacement.Pos(px + 2, py), UISize.Size(startWidth, 27), UIPlacement.CenterY);
-		addBGAnim("Normal", [0], 10, true);
-		addBGAnim("Read", [1], 10, false);
-		addBGAnim("Talking", [1, 2, 3, 4], 3, true);
-		addBGAnim("Notify", [5], 10, false);
-		playBGAnim("Normal");
-		nineSlice(UILayout.box(10, 10, 9, 12));
+		super(AssetPaths.pickup__png, UIPlacement.Pos(px, py), UISize.Size(8, 8), UIPlacement.Top);
 		scrollFactor.set(1, 1);
 		startX = x;
 		startY = y;
+		// nineSlice(UILayout.box(1, 1, 1, 1));
 
-		hideTimer = new FlxTimer();
-		t_interact = new UIText("[X]");
-		t_interact.setColor(0xff232855);
-		add(t_interact);
+		// t_interact = new UIText("[X]");
+		// t_interact.setColor(0xff232855);
+		// add(t_interact);
 		setSizeToInteract(1.0);
-		Input.setSwitchGamepadCallback(updateGamepadButton);
-		Input.setSwitchKeysCallback(updateKeyboardButton);
+		// Input.setSwitchGamepadCallback(updateGamepadButton);
+		// Input.setSwitchKeysCallback(updateKeyboardButton);
 		refresh(true);
+
 		close();
 	}
 
@@ -78,13 +68,14 @@ class TextPopup extends UIImage
 		y = startY = py;
 	}
 
-	public function setSizeToInteract(pratio:Float = 1.0)
+	public function setSizeToInteract(ratio:Float = 1.0)
 	{
-		ratio = Math.min(1.0, pratio);
-		var newWidth = t_interact.width * ratio;
-		(ratio < 1.0) ? offsetX = 0 : offsetX = startWidth - newWidth;
-		setSize(UISize.Size(newWidth, newWidth * bgSprite.height / bgSprite.width), true);
-		x = startX + (bgSprite.width * (1.0 - ratio)) / 2.0 - 1.0 * (1.0 - ratio) + offsetX / 2.0;
+		/*var newWidth = ratio * 8.0;
+			(ratio < 1.0) ? offsetX = 0 : offsetX = startWidth - newWidth;
+			setSize(UISize.Size(newWidth, ratio + 2));
+			x = startX + (bgSprite.width * (1.0 - ratio)) / 2.0 - 1.0 * (1.0 - ratio) + offsetX / 2.0; */
+		bgSprite.scale.set(ratio, ratio);
+		bgSprite.centerOrigin();
 	}
 
 	public function updateGamepadButton()
@@ -106,8 +97,6 @@ class TextPopup extends UIImage
 	{
 		if (state == p_state)
 			return;
-		if(showing)
-			return;
 		switch (p_state)
 		{
 			case PopupState.Show:
@@ -116,71 +105,51 @@ class TextPopup extends UIImage
 				if (state == PopupState.Notify)
 					return;
 				open();
-				hideTimer.cancel();
-				if (ratio != 1.0)
-				{
-					offsetY = appearY;
-				}
-				if (read)
-				{
-					playBGAnim("Read");
-				}
-				else
-				{
-					playBGAnim("Normal");
-				}
-				t_interact.visible = false;
+				y = startY;
+				offsetY = appearY;
+				setSizeToInteract(0.0);
+			/*t_interact.visible = false;
 				if (!notifySet)
 				{
 					t_interact.text = "[" + currentSelect + "]";
-				}
-				showing = true;
+			}*/
 			case PopupState.Hide:
-				if (state == PopupState.Hidden || state == PopupState.DelayedHide)
-					return;
-				if (notifySet)
-					return;
-				// state = PopupState.Hide;
-				hideTimer.start(0.2, Void -> setState(PopupState.DelayedHide));
-			case PopupState.DelayedHide:
 				if (state == PopupState.Hidden)
 					return;
 				if (notifySet)
 					return;
 				y = startY;
 				offsetY = 0;
-				t_interact.visible = false;
-				state = PopupState.DelayedHide;
+				// t_interact.visible = false;
+				state = PopupState.Hide;
 			case PopupState.Open:
 				if (state == PopupState.Hidden)
 					return;
 				read = true;
-				playBGAnim("Talking");
-				// color = 0x2994b6;
+				color = 0xaaaaaa;
 				y = startY;
 				offsetY = 0;
-				t_interact.visible = false;
+				// t_interact.visible = false;
 				notifySet = false;
 			case PopupState.Shown:
 				open();
 				y = startY;
 				offsetY = 0;
 				setSizeToInteract(1.0);
-				t_interact.visible = true;
+			// t_interact.visible = true;
 			case PopupState.Hidden:
 				close();
 			case Notify:
 				if (notifySet)
 					return;
 				open();
-				playBGAnim("Notify");
-				// color = 0xffffff;
+				color = 0xffffff;
 				read = false;
 				y = startY;
 				offsetY = appearY;
 				setSizeToInteract(0.0);
-				t_interact.visible = false;
-				t_interact.text = "[" + currentSelect + "]";
+				/*t_interact.visible = false;
+					t_interact.text = "!" + currentSelect + "!"; */
 				notifySet = true;
 				new FlxTimer().start(0.5, showNotifySelect);
 		}
@@ -191,6 +160,7 @@ class TextPopup extends UIImage
 	{
 		if (!notifySet)
 			return;
+		// t_interact.text = "[" + currentSelect + "]";
 		setSizeToInteract(1.0);
 		timer.start(0.5, showNotifyPoint);
 	}
@@ -199,8 +169,8 @@ class TextPopup extends UIImage
 	{
 		if (!notifySet)
 			return;
-		t_interact.text = "[" + currentSelect + "]";
-		setSizeToInteract(1.0);
+		t_interact.text = "!" + currentSelect + "!";
+		// setSizeToInteract(1.0);
 		timer.start(0.5, showNotifySelect);
 	}
 
@@ -223,21 +193,20 @@ class TextPopup extends UIImage
 				{
 					y = startY;
 					setSizeToInteract(1.0);
-					t_interact.visible = true;
+					// t_interact.visible = true;
 					state = PopupState.Shown;
-					showing = false;
 				}
 			case PopupState.Open:
 				offsetY += elapsed / animateTime * openY;
-				y = startY + offsetY;
-				setSizeToInteract(FlxMath.lerp(1.0, 0.6, offsetY / openY));
-				if (y >= startY + openY)
+				y = startY - offsetY;
+				setSizeToInteract(1.0 - offsetY / openY);
+				if (y <= startY - openY)
 				{
-					setSizeToInteract(0.6);
+					setSizeToInteract(0);
 					state = PopupState.Hidden;
-					// close();
+					close();
 				}
-			case PopupState.DelayedHide:
+			case PopupState.Hide:
 				offsetY += elapsed / animateTime * appearY;
 				y = startY + offsetY;
 				setSizeToInteract(1.0 - offsetY / appearY);

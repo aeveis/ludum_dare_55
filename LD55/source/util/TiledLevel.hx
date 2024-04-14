@@ -12,7 +12,6 @@ import flixel.addons.editors.tiled.TiledTileSet;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxDirectionFlags;
-import objs.ScreenTileMap;
 
 /**
  * ...
@@ -22,7 +21,7 @@ class TiledLevel extends TiledMap
 {
 	public var px:Float = 0;
 	public var py:Float = 0;
-	public var tilemap:ScreenTileMap;
+	public var tilemap:FlxTilemap;
 
 	public function new(TMXPath:Dynamic)
 	{
@@ -31,13 +30,13 @@ class TiledLevel extends TiledMap
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight);
 	}
 
-	public function loadTileMap(TileFileName:String, TiledLayerName:String = "tiles", gpuImage:Bool = false):ScreenTileMap
+	public function loadTileMap(TileFileName:String, TiledLayerName:String = "tiles", gpuImage:Bool = false):FlxTilemap
 	{
 		var tiledLayer:TiledTileLayer = cast getLayer(TiledLayerName);
 		var tileset:TiledTileSet = cast getTileSet(TileFileName);
 		if (tiledLayer.type != TiledLayerType.TILE)
 			throw "Tiled Layer " + TiledLayerName + "is not a tile layer";
-		tilemap = new ScreenTileMap(PlayState.instance.gameCam);
+		tilemap = new FlxTilemap();
 
 		var tilearray:Array<Int> = tiledLayer.tileArray;
 		for (i in 0...tilearray.length)
@@ -47,7 +46,6 @@ class TiledLevel extends TiledMap
 		tilemap.loadMapFromArray(tilearray, width, height, AssetPaths.getFile(TileFileName + (gpuImage ? "_gpu" : "")), tileWidth, tileHeight,
 			FlxTilemapAutoTiling.OFF, 1);
 
-		tilemap.populateScreenFrames();
 		return tilemap;
 	}
 

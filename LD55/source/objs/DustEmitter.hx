@@ -416,19 +416,19 @@ class DustEmitter extends MultiEmitter
 
 	public function fireflyPoof()
 	{
-		minVelX = -55;
-		maxVelX = 55;
-		minVelY = -55;
-		maxVelY = 55;
+		minVelX = -25 - PlayState.instance.speed;
+		maxVelX = 25 - PlayState.instance.speed;
+		minVelY = -25;
+		maxVelY = 25;
 		isSmoke = false;
-		for (i in 0...30)
+		for (i in 0...10)
 		{
-			if (i < 10)
-				color = 0xd5ff37;
-			else if (i < 20)
-				color = 0x7dee45;
+			if (i < 3)
+				color = 0xe1df75;
+			else if (i < 6)
+				color = 0x73d36d;
 			else
-				color = 0xb26a36;
+				color = 0xefb15a;
 			emitParticle(x, y);
 		}
 		color = FlxColor.WHITE;

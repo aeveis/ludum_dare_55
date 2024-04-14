@@ -5,22 +5,28 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.editors.tiled.TiledObject;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
+import flixel.sound.FlxSound;
 import objs.Background;
 import objs.Bird;
 import objs.DustEmitter;
+import objs.FuelBee;
 import openfl.filters.BitmapFilter;
 import openfl.filters.ShaderFilter;
 import shaders.CameraShader;
 import ui.TextBox;
 import util.Input;
+import util.RangeMap;
+import util.TiledLevel;
 import util.ui.UIContainer.UILayout;
 import util.ui.UIContainer.UIPlacement;
 
 class PlayState extends FlxState
 {
 	public static var instance:PlayState;
+	public var level:TiledLevel;
 	public var fadeComplete:Bool = false;
 	public var followCam:FlxObject = null;
 	public var frameCount:Int = 0;
@@ -32,8 +38,12 @@ class PlayState extends FlxState
 	public var bg:Background;
 	public var dustEmit:DustEmitter;
 	public var bird:Bird;
-
+	public var bees:FlxTypedGroup<FuelBee>;
+	public var beePool:RangeMap<FuelBee>;
+	
 	public var textbox:TextBox;
+
+	public var sfxSpeed:FlxSound;
 
 	public var time:Float = 0;
 	public var speedRatio(get, null):Float;
@@ -44,8 +54,17 @@ class PlayState extends FlxState
 			return 0.0;
 		}
 		var ratio:Float = bird.velocity.x/bird.maxTotalSpeed;
+		return ratio*ratio;
+	}
+	public var speedMultiplier(get, null):Float;
+	function get_speedMultiplier()
+	{
+		if(!G.startInput)
+		{
+			return 0.0;
+		}
 		var sign:Float = (bird.velocity.x > 0)?1.0:-1.0;
-		return sign*ratio*ratio*2.0;
+		return sign*speedRatio*2.0;
 	}
 	public var speed(get, null):Float;
 	function get_speed()
@@ -79,6 +98,8 @@ class PlayState extends FlxState
 		Input.control = new Input();
 		Input.control.platformerSetup();
 		dustEmit = new DustEmitter();
+		bees = new FlxTypedGroup<FuelBee>();
+		beePool = new RangeMap();
 		
 		/*textbox = new TextBox(AssetPaths.textbox__png, UIPlacement.Top, UISize.XFill(22), 0.5, UIParent.Camera(camera));
 		textbox.setPortrait(AssetPaths.portraits__png, true, 16, 16);
@@ -87,12 +108,34 @@ class PlayState extends FlxState
 		bg = new Background();
 		bird = new Bird(10, 50);
 		
+		level = new TiledLevel(AssetPaths.getFile("level" + G.level, AssetPaths.LOC_DATA, "tmx"));
+		level.loadTileMap("tiles", "tiles", false);
+		level.loadObjects("entities", loadObj);
+		
 		add(bg);
 		fgGroup.add(dustEmit);
+		fgGroup.add(bees);
 		fgGroup.add(bird);
 		add(fgGroup);
 
+		sfxSpeed = G.loadLoopedSound(AssetPaths.speed__ogg, 0.5);
 		fade(0.3, true, fadeOnComplete);
+	}
+
+	public function loadObj(pobj:TiledObject, px:Float, py:Float)
+	{
+		var pname:String = pobj.name;
+		
+		switch (pname)
+		{
+			case "fuelbee":
+				var bee = new FuelBee(px, py);
+				while(beePool.exists(px))
+				{
+					px += 0.1;
+				}
+				beePool.set(px, bee);
+		}
 	}
 
 	override public function update(elapsed:Float)
@@ -107,6 +150,7 @@ class PlayState extends FlxState
 			if (Input.control.any || Input.control.keys.get("select").pressed)
 			{
 				G.startInput = true;
+				sfxSpeed.resume();
 				// FlxG.sound.music.fadeIn(1, 0, 0.5);
 				// remove(title, true);
 				// title.kill();
@@ -127,16 +171,49 @@ class PlayState extends FlxState
 			return;
 		}
 
-		time += elapsed * speedRatio;
-		time = time % 31.41592653;
+		spawnBees();
+		FlxG.overlap(bees, bird, beeBoost);
+
+		time += elapsed * speedMultiplier;
+		time = time % 200.0;
 		camShader.time.value = [time];
-		camShader.ratio.value = [speedRatio];
+		camShader.ratio.value = [speedMultiplier];
+
+		//trace(sfxSpeed.playing + " " + sfxSpeed.volume + " " + sfxSpeed.pitch + " " + speedRatio);
+		sfxSpeed.volume = FlxMath.lerp(0.5,1.0,speedRatio);
+		sfxSpeed.pitch = FlxMath.lerp(1.0,2.2,speedRatio);
 		super.update(elapsed);
 
 		if (Input.control.keys.get("restart").justPressed)
 		{
 			restart();
 		}
+	}
+
+	public function spawnBees()
+	{
+		if(!beePool.existsLess(bird.x))
+		{
+			return;
+		}
+		var closebees:Array<FuelBee> = beePool.getAllLess(bird.x);
+		for(bee in closebees)
+		{
+			if(bee == null || bee.spawned)
+			{
+				continue;
+			}
+
+			bee.x = FlxG.width + 100.0;
+			bee.spawned = true;
+			bees.add(bee);
+		}
+	}
+	public function beeBoost(bee:FuelBee, bird:Bird)
+	{
+		bee.explode();
+		bird.airBoostXStrength = 0.35;
+		bird.fsm.switchState(MoveState.AirBoost);
 	}
 	
 	public function fade(pDuration:Float, pFadeIn:Bool = false, ?pCallback:Void->Void, ?pColor:Int)

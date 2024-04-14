@@ -25,8 +25,10 @@ class Background extends FlxSprite
 
     override function update(elapsed:Float) {
         super.update(elapsed);
-        time += elapsed * PlayState.instance.speedRatio;
+        time += elapsed * PlayState.instance.speedMultiplier;
+		time = time % 200.0;
         waveTime += elapsed;
+		waveTime = waveTime % 200.0;
         bgShader.time.value = [time];
         bgShader.waveTime.value = [waveTime];
         speed = time - prevTime;
@@ -129,9 +131,9 @@ class BackgroundShader extends FlxShader
 
             vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
             float perY = uv.y * uv.y;
-            float posx = mod(uv.x + time, 3.14);
-            float pos2x = mod(2.0 * uv.x + time, 3.14);
-            float cloudx = mod((uv.x + time / 100.0), 3.14);
+            float posx = uv.x + time;
+            float pos2x = 2.0 * uv.x + time;
+            float cloudx = (uv.x + time / 30.0);
             float cloudy = perY - 0.2;
 
             col.rgb = mix(vec3(0.271, 0.722, 0.678), vec3(0.412, 0.871, 0.875), floor(perY * 10.0)/10.0 );
@@ -151,7 +153,7 @@ class BackgroundShader extends FlxShader
             
             float treeDetail = (snoise(vec2(posx * 2.5, uv.y * 25.0)) - 0.5) * 0.025;
             float treeXNoise = (snoise(vec2(posx * 2.0, uv.y * 3.0)) - 0.5) * 0.05;
-            float tree =  snoise(vec2(posx * 3.0 + treeDetail + treeXNoise * 0.5, 0.0)) * (uv.y * 2.0 + treeXNoise) * (1.0 - smoothstep(surface, surface + 0.1, uv.y));
+            float tree = snoise(vec2(posx * 3.0 + treeDetail + treeXNoise * 0.5, 0.0)) * (uv.y * 2.0 + treeXNoise) * (1.0 - smoothstep(surface, surface + 0.1, uv.y));
             tree *= tree;
             col.rgb = mix(col.rgb, vec3(0.280, 0.429, 0.324), step(0.75, tree));
             //col.rgb = tree;

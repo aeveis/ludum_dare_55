@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="20" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="87">
+ <tileset firstgid="1" source="fuelbee.tsx"/>
+ <tileset firstgid="5" source="tiles.tsx"/>
+ <layer id="1" name="tiles" width="20" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="2" name="entities" offsetx="2.93416" offsety="-1.17367">
+  <object id="1" name="fuelbee" gid="1" x="4.32349" y="29.4194" width="16" height="16"/>
+  <object id="2" name="fuelbee" gid="1" x="13.4194" y="34.252" width="16" height="16"/>
+  <object id="3" name="fuelbee" gid="1" x="11.0721" y="66.5278" width="16" height="16"/>
+  <object id="4" name="fuelbee" gid="1" x="6.37741" y="53.9109" width="16" height="16"/>
+  <object id="5" name="fuelbee" gid="1" x="27.21" y="68.2883" width="16" height="16"/>
+  <object id="6" name="fuelbee" gid="1" x="16.647" y="41.8808" width="16" height="16"/>
+  <object id="7" name="fuelbee" gid="1" x="18.1141" y="55.0845" width="16" height="16"/>
+  <object id="8" name="fuelbee" gid="1" x="31.0244" y="80.6118" width="16" height="16"/>
+  <object id="9" name="fuelbee" gid="1" x="36.8927" y="96.1628" width="16" height="16"/>
+  <object id="10" name="fuelbee" gid="1" x="41.5874" y="110.247" width="16" height="16"/>
+  <object id="11" name="fuelbee" gid="1" x="34.252" y="103.792" width="16" height="16"/>
+  <object id="12" name="fuelbee" gid="1" x="32.7849" y="90.0011" width="16" height="16"/>
+  <object id="13" name="fuelbee" gid="1" x="26.6231" y="76.2105" width="16" height="16"/>
+  <object id="14" name="fuelbee" gid="1" x="30.731" y="58.6055" width="16" height="16"/>
+  <object id="15" name="fuelbee" gid="1" x="50.9767" y="56.845" width="16" height="16"/>
+  <object id="16" name="fuelbee" gid="1" x="25.7429" y="137.241" width="16" height="16"/>
+  <object id="17" name="fuelbee" gid="1" x="52.1504" y="134.894" width="16" height="16"/>
+  <object id="18" name="fuelbee" gid="1" x="52.1504" y="174.505" width="16" height="16"/>
+  <object id="19" name="fuelbee" gid="1" x="60.9529" y="163.942" width="16" height="16"/>
+  <object id="20" name="fuelbee" gid="1" x="65.3541" y="154.553" width="16" height="16"/>
+  <object id="21" name="fuelbee" gid="1" x="67.408" y="144.577" width="16" height="16"/>
+  <object id="22" name="fuelbee" gid="1" x="69.4619" y="135.187" width="16" height="16"/>
+  <object id="23" name="fuelbee" gid="1" x="72.3961" y="124.624" width="16" height="16"/>
+  <object id="24" name="fuelbee" gid="1" x="74.7434" y="112.888" width="16" height="16"/>
+  <object id="25" name="fuelbee" gid="1" x="59.7792" y="77.3842" width="16" height="16"/>
+  <object id="26" name="fuelbee" gid="1" x="65.9409" y="82.9591" width="16" height="16"/>
+  <object id="27" name="fuelbee" gid="1" x="72.1027" y="73.8632" width="16" height="16"/>
+  <object id="28" name="fuelbee" gid="1" x="77.971" y="68.5817" width="16" height="16"/>
+  <object id="29" name="fuelbee" gid="1" x="84.4262" y="67.7014" width="16" height="16"/>
+  <object id="30" name="fuelbee" gid="1" x="92.9353" y="71.1356" width="16" height="16"/>
+  <object id="31" name="fuelbee" gid="1" x="99.7325" y="48.8403" width="16" height="16"/>
+  <object id="32" name="fuelbee" gid="1" x="102.733" y="31.8403" width="16" height="16"/>
+  <object id="33" name="fuelbee" gid="1" x="107.066" y="17.1737" width="16" height="16"/>
+  <object id="39" name="fuelbee" gid="1" x="120.066" y="16.1737" width="16" height="16"/>
+  <object id="40" name="fuelbee" gid="1" x="127.066" y="23.1737" width="16" height="16"/>
+  <object id="41" name="fuelbee" gid="1" x="109.399" y="159.507" width="16" height="16"/>
+  <object id="42" name="fuelbee" gid="1" x="117.733" y="178.507" width="16" height="16"/>
+  <object id="43" name="fuelbee" gid="1" x="126.066" y="190.84" width="16" height="16"/>
+  <object id="44" name="fuelbee" gid="1" x="113.066" y="170.174" width="16" height="16"/>
+  <object id="45" name="fuelbee" gid="1" x="136.733" y="179.84" width="16" height="16"/>
+  <object id="46" name="fuelbee" gid="1" x="140.399" y="168.174" width="16" height="16"/>
+  <object id="47" name="fuelbee" gid="1" x="137.066" y="37.507" width="16" height="16"/>
+  <object id="48" name="fuelbee" gid="1" x="143.066" y="51.1737" width="16" height="16"/>
+  <object id="49" name="fuelbee" gid="1" x="144.066" y="151.84" width="16" height="16"/>
+  <object id="50" name="fuelbee" gid="1" x="146.733" y="137.174" width="16" height="16"/>
+  <object id="51" name="fuelbee" gid="1" x="148.066" y="65.1737" width="16" height="16"/>
+  <object id="52" name="fuelbee" gid="1" x="149.733" y="124.174" width="16" height="16"/>
+  <object id="53" name="fuelbee" gid="1" x="152.066" y="81.507" width="16" height="16"/>
+  <object id="54" name="fuelbee" gid="1" x="154.399" y="102.84" width="16" height="16"/>
+  <object id="55" name="fuelbee" gid="1" x="169.066" y="112.84" width="16" height="16"/>
+  <object id="56" name="fuelbee" gid="1" x="169.399" y="91.1737" width="16" height="16"/>
+  <object id="57" name="fuelbee" gid="1" x="187.066" y="104.507" width="16" height="16"/>
+  <object id="58" name="fuelbee" gid="1" x="190.066" y="80.1737" width="16" height="16"/>
+  <object id="59" name="fuelbee" gid="1" x="192.733" y="126.174" width="16" height="16"/>
+  <object id="60" name="fuelbee" gid="1" x="202.066" y="93.1737" width="16" height="16"/>
+  <object id="61" name="fuelbee" gid="1" x="204.733" y="113.84" width="16" height="16"/>
+  <object id="62" name="fuelbee" gid="1" x="211.399" y="43.507" width="16" height="16"/>
+  <object id="63" name="fuelbee" gid="1" x="214.733" y="167.507" width="16" height="16"/>
+  <object id="64" name="fuelbee" gid="1" x="230.066" y="61.8403" width="16" height="16"/>
+  <object id="65" name="fuelbee" gid="1" x="232.066" y="125.507" width="16" height="16"/>
+  <object id="66" name="fuelbee" gid="1" x="262.733" y="121.507" width="16" height="16"/>
+  <object id="67" name="fuelbee" gid="1" x="255.733" y="132.84" width="16" height="16"/>
+  <object id="68" name="fuelbee" gid="1" x="268.399" y="108.507" width="16" height="16"/>
+  <object id="69" name="fuelbee" gid="1" x="273.066" y="97.8403" width="16" height="16"/>
+  <object id="70" name="fuelbee" gid="1" x="269.066" y="83.8403" width="16" height="16"/>
+  <object id="71" name="fuelbee" gid="1" x="243.733" y="68.8403" width="16" height="16"/>
+  <object id="72" name="fuelbee" gid="1" x="223.066" y="54.507" width="16" height="16"/>
+  <object id="73" name="fuelbee" gid="1" x="200.733" y="46.8403" width="16" height="16"/>
+  <object id="74" name="fuelbee" gid="1" x="186.399" y="41.8403" width="16" height="16"/>
+  <object id="75" name="fuelbee" gid="1" x="171.066" y="42.8403" width="16" height="16"/>
+  <object id="76" name="fuelbee" gid="1" x="97.0658" y="97.8403" width="16" height="16"/>
+  <object id="77" name="fuelbee" gid="1" x="115.733" y="105.84" width="16" height="16"/>
+  <object id="78" name="fuelbee" gid="1" x="132.066" y="96.1737" width="16" height="16"/>
+  <object id="79" name="fuelbee" gid="1" x="56.7325" y="68.8403" width="16" height="16"/>
+  <object id="80" name="fuelbee" gid="1" x="257.399" y="76.507" width="16" height="16"/>
+  <object id="81" name="fuelbee" gid="1" x="286.066" y="101.174" width="16" height="16"/>
+  <object id="82" name="fuelbee" gid="1" x="204.733" y="147.174" width="16" height="16"/>
+  <object id="83" name="fuelbee" gid="1" x="196.399" y="138.174" width="16" height="16"/>
+  <object id="84" name="fuelbee" gid="1" x="241.399" y="146.507" width="16" height="16"/>
+  <object id="85" name="fuelbee" gid="1" x="233.399" y="154.174" width="16" height="16"/>
+  <object id="86" name="fuelbee" gid="1" x="95.3992" y="144.174" width="16" height="16"/>
+ </objectgroup>
+</map>

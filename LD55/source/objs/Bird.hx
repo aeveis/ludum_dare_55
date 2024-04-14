@@ -17,6 +17,7 @@ enum MoveState
 	Glide;
 	Fall;
 	AirDash;
+	AirBoost;
 }
 
 class Bird extends FlxSprite
@@ -29,16 +30,17 @@ class Bird extends FlxSprite
 	public var jumpStrength:Float = 8;
 	public var jumpVariable:Float = 0.5;
 	public var flapCount:Float = 0;
-	public var weakflapStrength:Float = 5;
-	public var flapStrength:Float = 25;
+	public var flapStrength:Float = 45;
 	public var currentFlapStrength:Float = 25;
 	public var flapVariable:Float = 2;
 	public var fallGravity:Float = 200;
 	public var glideGravity:Float = 25;
 	public var airDrag:Float = 250;
 	public var moveDrag:Float = 0.5;
-	public var airDashStrength:Float = 30;
-	public var airDashDiagonalStrength:Float;
+	public var airDashYStrength:Float = 20.0;
+	public var airDashXStrength:Float = 0.25;
+	public var airBoostXStrength:Float = 0.35;
+	public var airBoostYStrength:Float = 350.0;
 	public var maxDashVelocity = 400;
 	public var maxYVelocity = 120;
 	public var maxTotalSpeed = 2.5;
@@ -49,7 +51,7 @@ class Bird extends FlxSprite
 
 	static public var control:Bool = true;
 
-	public var onGround:TimedBool;
+	//public var onGround:TimedBool;
 	public var jumping:TimedBool;
 	public var jumpCooldown:TimedBool;
 	public var dashing:TimedBool;
@@ -57,7 +59,7 @@ class Bird extends FlxSprite
 	public var delayedDash:Bool = false;
 
 	public var dashCount:Int = 0;
-	public var normalDashTime:Float = 0.15;
+	public var normalDashTime:Float = 0.25;
 
 	public var followPoint:FlxPoint;
 	public var followOffset:Float = 3;
@@ -90,13 +92,12 @@ class Bird extends FlxSprite
 		acceleration.y = 0;
 		elasticity = 0;
 
-		onGround = new TimedBool(0.15);
+		//onGround = new TimedBool(0.15);
 		jumping = new TimedBool(0.2);
 		jumpCooldown = new TimedBool(0.3);
 		dashing = new TimedBool(normalDashTime);
-		dashCooldown = new TimedBool(0.2);
+		dashCooldown = new TimedBool(1.5);
 		chirping = new TimedBool(0.15);
-		airDashDiagonalStrength = Math.sqrt(airDashStrength * airDashStrength / 2.0);
 
 		animation.add("sleep", [0, 1], 5, true);
 		animation.add("surprise", [2], 5, false);
@@ -105,6 +106,8 @@ class Bird extends FlxSprite
 		animation.add("glide", [5, 6, 5, 7], 6, true);
 		animation.add("hardglide", [13, 14, 13, 15], 10, true);
 		animation.add("fall", [8, 9, 10], 10, true);
+		animation.add("airDash", [11], 5, false);
+		animation.add("boost", [12], 5, false);
 		fsm = new FSM();
 
 		fsm.addState(MoveState.Idle, idleEnter);
@@ -112,6 +115,7 @@ class Bird extends FlxSprite
 		fsm.addState(MoveState.Flap, flapEnter, flapUpdate);
 		fsm.addState(MoveState.Fall, fallEnter, fallUpdate);
 		fsm.addState(MoveState.AirDash, airDashEnter, airDashUpdate, airDashLeave);
+		fsm.addState(MoveState.AirBoost, airBoostEnter, airDashUpdate);
 		fsm.switchState(MoveState.Idle);
 
 		control = true;
@@ -128,11 +132,11 @@ class Bird extends FlxSprite
 
 		dashCooldown.update(elapsed);
 		dashing.update(elapsed);
-		if (!dashCooldown.soft)
+		/*if (!dashCooldown.soft)
 		{
 			onGround.hard = isTouching(FlxDirectionFlags.FLOOR);
 			onGround.update(elapsed);
-		}
+		}*/
 		jumping.update(elapsed);
 		jumpCooldown.update(elapsed);
 		chirping.update(elapsed);
@@ -181,6 +185,7 @@ class Bird extends FlxSprite
 
 		//scale.x = 1.0 + 0.1 * PlayState.instance.speedRatio;
 		scale.y = 1.0 - 0.1 * PlayState.instance.speedRatio;
+
 	}
 
 	private function idleEnter()
@@ -251,13 +256,12 @@ class Bird extends FlxSprite
 		elasticity = 0.5;
 		followOffset = 2;
 		acceleration.y = 1;
-		maxVelocity.x = maxVelocity.y = maxDashVelocity;
-		angle = 0;
+		maxVelocity.y = maxDashVelocity;
 		dashCooldown.trigger();
 		dashing.trigger();
 		// FlxG.sound.play(AssetPaths.dash__ogg);
 		DustEmitter.instance.x = x;
-		DustEmitter.instance.y = y;
+		DustEmitter.instance.y = y + 5;
 
 		/*trace("delayed left: " + Input.control.left.justPressedDelayed + " right: " + Input.control.right.justPressedDelayed + " up: "
 				+ Input.control.up.justPressedDelayed + " down: " + Input.control.down.justPressedDelayed);
@@ -277,90 +281,150 @@ class Bird extends FlxSprite
 		{
 			facing = FlxDirectionFlags.RIGHT;
 		}
-
+		animation.play("airDash");
 		if (Input.control.up.pressed || Input.control.up.justPressedDelayed)
 		{
-			animation.play("airDash");
 			if (facing == FlxDirectionFlags.LEFT && diagonal)
 			{
-				velocity.x = -airDashDiagonalStrength;
-				velocity.y = -airDashDiagonalStrength;
+				velocity.x -= airDashXStrength;
+				velocity.y -= airDashYStrength;
 				// animation.play("airDashDiaUp");
-				angle = 45;
 				DustEmitter.instance.dashStartPoof(velocity);
 				return;
 			}
 			if (facing == FlxDirectionFlags.RIGHT && diagonal)
 			{
-				velocity.x = airDashDiagonalStrength;
-				velocity.y = -airDashDiagonalStrength;
+				velocity.x += airDashXStrength;
+				velocity.y += airDashYStrength;
 				// animation.play("airDashDiaUp");
-				angle = -45;
 				DustEmitter.instance.dashStartPoof(velocity);
 				return;
 			}
 
-			if (facing == FlxDirectionFlags.LEFT)
-			{
-				angle = 90;
-			}
-			else
-			{
-				angle = -90;
-			}
-			velocity.x = 0;
-			velocity.y = -airDashStrength;
+			velocity.y = -airDashYStrength;
 			DustEmitter.instance.dashStartPoof(velocity);
 			return;
 		}
 		if (Input.control.down.pressed || Input.control.down.justPressedDelayed)
 		{
-			animation.play("airDash");
 			if (facing == FlxDirectionFlags.LEFT && diagonal)
 			{
-				velocity.x = -airDashDiagonalStrength;
-				velocity.y = airDashDiagonalStrength;
+				velocity.x -= airDashXStrength;
+				velocity.y += airDashYStrength;
 				// animation.play("airDashDiaDown");
-				angle = -45;
 				DustEmitter.instance.dashStartPoof(velocity);
 				return;
 			}
 			if (facing == FlxDirectionFlags.RIGHT && diagonal)
 			{
-				velocity.x = airDashDiagonalStrength;
-				velocity.y = airDashDiagonalStrength;
+				velocity.x += airDashXStrength;
+				velocity.y += airDashYStrength;
 				// animation.play("airDashDiaDown");
-				angle = 45;
 				DustEmitter.instance.dashStartPoof(velocity);
 				return;
 			}
 
-			if (facing == FlxDirectionFlags.LEFT)
-			{
-				angle = -90;
-			}
-			else
-			{
-				angle = 90;
-			}
-			velocity.x = 0;
-			velocity.y = airDashStrength;
+			velocity.y = airDashYStrength;
 			DustEmitter.instance.dashStartPoof(velocity);
 			return;
 		}
 		if (facing == FlxDirectionFlags.LEFT)
 		{
-			velocity.x = -airDashStrength;
-			velocity.y = 0;
-			animation.play("airDash");
+			velocity.x -= airDashXStrength;
 			DustEmitter.instance.dashStartPoof(velocity);
 			return;
 		}
 		if (facing == FlxDirectionFlags.RIGHT)
 		{
-			velocity.x = airDashStrength;
-			velocity.y = 0;
-			animation.play("airDash");
+			velocity.x += airDashXStrength;
+			DustEmitter.instance.dashStartPoof(velocity);
+			return;
+		}
+	}
+
+	private function airBoostEnter()
+	{
+		drag.y = airDrag;
+		offset.y = airYOffset;
+		acceleration.y = glideGravity;
+
+		elasticity = 0.5;
+		followOffset = 2;
+		acceleration.y = 1;
+		maxVelocity.y = maxDashVelocity;
+		dashCooldown.trigger();
+		dashing.trigger();
+		// FlxG.sound.play(AssetPaths.dash__ogg);
+		DustEmitter.instance.x = x;
+		DustEmitter.instance.y = y + 5;
+		
+		delayedDash = !Input.control.anyJustPressed;
+
+		var diagonal:Bool = Input.control.anyLeftRight;
+		if (Input.control.left.justPressedDelayed)
+		{
+			facing = FlxDirectionFlags.LEFT;
+		}
+		if (Input.control.right.justPressedDelayed)
+		{
+			facing = FlxDirectionFlags.RIGHT;
+		}
+		animation.play("boost");
+		if (Input.control.up.pressed || Input.control.up.justPressedDelayed)
+		{
+			if (facing == FlxDirectionFlags.LEFT && diagonal)
+			{
+				velocity.x -= airBoostXStrength;
+				velocity.y -= airDashYStrength;
+				// animation.play("airDashDiaUp");
+				DustEmitter.instance.dashStartPoof(velocity);
+				return;
+			}
+			if (facing == FlxDirectionFlags.RIGHT && diagonal)
+			{
+				velocity.x += airBoostXStrength;
+				velocity.y += airDashYStrength;
+				// animation.play("airDashDiaUp");
+				DustEmitter.instance.dashStartPoof(velocity);
+				return;
+			}
+
+			velocity.y = -airDashYStrength;
+			DustEmitter.instance.dashStartPoof(velocity);
+			return;
+		}
+		if (Input.control.down.pressed || Input.control.down.justPressedDelayed)
+		{
+			if (facing == FlxDirectionFlags.LEFT && diagonal)
+			{
+				velocity.x -= airBoostXStrength;
+				velocity.y += airDashYStrength;
+				// animation.play("airDashDiaDown");
+				DustEmitter.instance.dashStartPoof(velocity);
+				return;
+			}
+			if (facing == FlxDirectionFlags.RIGHT && diagonal)
+			{
+				velocity.x += airBoostXStrength;
+				velocity.y += airDashYStrength;
+				// animation.play("airDashDiaDown");
+				DustEmitter.instance.dashStartPoof(velocity);
+				return;
+			}
+
+			velocity.y = airDashYStrength;
+			DustEmitter.instance.dashStartPoof(velocity);
+			return;
+		}
+		if (facing == FlxDirectionFlags.LEFT)
+		{
+			velocity.x -= airBoostXStrength;
+			DustEmitter.instance.dashStartPoof(velocity);
+			return;
+		}
+		if (facing == FlxDirectionFlags.RIGHT)
+		{
+			velocity.x += airBoostXStrength;
 			DustEmitter.instance.dashStartPoof(velocity);
 			return;
 		}
@@ -369,10 +433,7 @@ class Bird extends FlxSprite
 	private function airDashLeave()
 	{
 		acceleration.y = glideGravity;
-		maxVelocity.x = maxVelocity.y = maxYVelocity;
-		angle = 0;
-		scale.x = 1.0;
-		scale.y = 1.0;
+		maxVelocity.y = maxYVelocity;
 		elasticity = 0;
 	}
 
@@ -381,7 +442,7 @@ class Bird extends FlxSprite
 		if (canDash())
 		{
 			fsm.switchState(MoveState.AirDash);
-			onGround.hard = false;
+			//onGround.hard = false;
 			return;
 		}
 		if (!jumping.soft)
@@ -424,14 +485,14 @@ class Bird extends FlxSprite
 		}
 		if(Math.abs(velocity.x) + 0.01 > maxSpeed)
 		{
-			if(animation.name != "hardglide")
+			if(animation.name == "glide")
 			{
 				animation.play("hardglide");
 			}
 		}
 		else
 		{
-			if(animation.name != "glide")
+			if(animation.name == "hardglide")
 			{
 				animation.play("glide");
 			}
@@ -461,33 +522,24 @@ class Bird extends FlxSprite
 
 	private function airDashUpdate()
 	{
-		if (Input.control.anyJustPressed && Input.control.keys.get("select").justPressedDelayed)
+		if (Input.control.pressedBothY) {}
+		else if (Input.control.up.pressed)
 		{
-			fsm.switchState(MoveState.AirDash);
+			velocity.y -= elapsed * airBoostYStrength;
 		}
-		else if ((Input.control.anyJustPressed || Input.control.keys.get("select").justPressed))
+		else if (Input.control.down.pressed)
 		{
-			fsm.switchState(MoveState.AirDash);
+			velocity.y += elapsed * airBoostYStrength;
 		}
 
-		if (!dashing.soft && animation.finished)
+		if (!dashing.soft)
 		{
 			fsm.switchState(MoveState.Glide);
 		}
 		else
 		{
-			if (animation.curAnim.curFrame == 2)
-			{
-				scale.x = 1.5;
-				scale.y = 0.5;
-			}
-			else
-			{
-				scale.x = scale.y = 1.0;
-			}
-
 			DustEmitter.instance.x = x;
-			DustEmitter.instance.y = y;
+			DustEmitter.instance.y = y + 6;
 			DustEmitter.instance.dashPoof();
 			move(moveSpeed);
 		}
@@ -498,14 +550,6 @@ class Bird extends FlxSprite
 		dashing.setDelay(normalDashTime);
 
 		var attemptDash:Bool = (Input.control.keys.get("select").justPressed && !dashCooldown.soft);
-		if (attemptDash)
-		{
-			if (dashCount <= 0)
-				return false;
-
-			dashCount--;
-			// PlayState.instance.updateDashCount();
-		}
 		return attemptDash;
 	}
 

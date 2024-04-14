@@ -99,9 +99,6 @@ class CameraShader extends FlxShader
 			float xpixel = 20.0 / openfl_TextureSize.x;
 			float ypixel = 20.0 / openfl_TextureSize.y;
 
-			//uv.x += 0.1 * sin(time * 0.5 + uv.x * 10.0);
-			//uv.y += 0.1 * sin(time * 0.25 + uv.y * 10.0);
-
 			float warp = mix(0.0, xpixel * ratio * snoise(vec2(uv.x/20.0 + time + 1231.0, uv.y * 40.0)), 1.0 - min(uv.x + xpixel * 2.0, 1.0));
 			uv.x = uv.x + warp;
 
