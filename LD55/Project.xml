@@ -33,6 +33,20 @@
 	<source path="source" />
 	<assets path="assets" exclude="*.mp3|*.it|*.wav|*.db|*.it|*.bak" />
 
+	<assets path="assets" unless="flash">
+		<sound path="sounds/short_chirp0.ogg"					id="short_chirp0" />
+		<sound path="sounds/short_chirp1.ogg"					id="short_chirp1" />
+		<sound path="sounds/short_chirp2.ogg"					id="short_chirp2" />
+		<sound path="sounds/chirptype.ogg"					id="birdtype" />
+		<sound path="sounds/bugdeath.ogg"					id="bugdeath" />
+		<sound path="sounds/boxhit.ogg"					id="boxhit" />
+		<sound path="sounds/portal.ogg"					id="portal" />
+		<sound path="sounds/flap0.ogg"					id="flap0" />
+		<sound path="sounds/flap1.ogg"					id="flap1" />
+
+		<sound path="music/flyyoufools.ogg"						id="flyyoufools" />
+		
+	</assets>
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />

@@ -100,6 +100,19 @@ class DustEmitter extends MultiEmitter
 			cloudPoof();
 		}
 	}
+	public function foosh()
+	{
+		minVelX = -10;
+		maxVelX = 500;
+		minVelY = -20;
+		maxVelY = 20;
+
+		for(i in 0...4)
+		{
+			color = FlxColor.interpolate(0xe8482d, 0xe1df75, FlxG.random.float());
+			emitParticle(x, y);
+		}
+	}
 
 	public function constantPoof()
 	{
@@ -110,7 +123,7 @@ class DustEmitter extends MultiEmitter
 
 		if (FlxG.random.bool(5 + 10 * PlayState.instance.speedRatio))
 		{
-			randomSkyColor();
+			color = FlxColor.interpolate(0xe8482d, 0xe1df75, FlxG.random.float());
 			emitParticle(x, y);
 		}
 
@@ -414,21 +427,55 @@ class DustEmitter extends MultiEmitter
 		height = 8;
 	}
 
-	public function fireflyPoof()
+	public function colorPoof(pcolor:FlxColor)
+	{
+		width = 32;
+		height = 32;
+		minVelX = -30 - PlayState.instance.speed;
+		maxVelX = 30 - PlayState.instance.speed;
+		minVelY = -30;
+		maxVelY = 30;
+		color = pcolor;
+		for (i in 0...15)
+		{
+			emitParticle(x, y);
+		}
+		color = FlxColor.WHITE;
+	}
+
+	public function fireflyPoof(bugType:Int)
 	{
 		minVelX = -25 - PlayState.instance.speed;
 		maxVelX = 25 - PlayState.instance.speed;
 		minVelY = -25;
 		maxVelY = 25;
 		isSmoke = false;
-		for (i in 0...10)
+		for (i in 0...20)
 		{
-			if (i < 3)
-				color = 0xe1df75;
-			else if (i < 6)
-				color = 0x73d36d;
-			else
-				color = 0xefb15a;
+			switch(bugType)
+			{
+				case 0:
+					if (i < 6)
+						color = 0xe1df75;
+					else if (i < 12)
+						color = 0x73d36d;
+					else
+						color = 0xefb15a;
+				case 1:
+					if (i < 6)
+						color = 0xefb15a;
+					else if (i < 12)
+						color = 0xf7717d;
+					else
+						color = 0xce454f;
+				case 2:
+					if (i < 6)
+						color = 0x6dd0d3;
+					else if (i < 12)
+						color = 0x759de1;
+					else
+						color = 0x377eba;
+			}
 			emitParticle(x, y);
 		}
 		color = FlxColor.WHITE;

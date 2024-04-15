@@ -12,6 +12,7 @@ import util.TimedBool;
 
 enum MoveState
 {
+	Sleep;
 	Idle;
 	Flap;
 	Glide;
@@ -41,6 +42,8 @@ class Bird extends FlxSprite
 	public var airDashXStrength:Float = 0.25;
 	public var airBoostXStrength:Float = 0.35;
 	public var airBoostYStrength:Float = 350.0;
+	public var diveStrength:Float = 200.0;
+	public var floatStrength:Float = 25.0;
 	public var maxDashVelocity = 400;
 	public var maxYVelocity = 120;
 	public var maxTotalSpeed = 2.5;
@@ -51,7 +54,7 @@ class Bird extends FlxSprite
 
 	static public var control:Bool = true;
 
-	//public var onGround:TimedBool;
+	// public var onGround:TimedBool;
 	public var jumping:TimedBool;
 	public var jumpCooldown:TimedBool;
 	public var dashing:TimedBool;
@@ -71,7 +74,7 @@ class Bird extends FlxSprite
 
 	private var edgeDraft = 400;
 
-	public var straps:FlxSprite;
+	public var portalLine:PortalLine;
 
 	public function new(px:Float, py:Float)
 	{
@@ -79,7 +82,7 @@ class Bird extends FlxSprite
 
 		loadGraphic(AssetPaths.firebird__png, true, 16, 16);
 
-		width = height = 4;
+		width = height = 8;
 		centerOffsets();
 
 		setFacingFlip(FlxDirectionFlags.RIGHT, false, false);
@@ -92,11 +95,11 @@ class Bird extends FlxSprite
 		acceleration.y = 0;
 		elasticity = 0;
 
-		//onGround = new TimedBool(0.15);
+		// onGround = new TimedBool(0.15);
 		jumping = new TimedBool(0.2);
 		jumpCooldown = new TimedBool(0.3);
 		dashing = new TimedBool(normalDashTime);
-		dashCooldown = new TimedBool(1.5);
+		dashCooldown = new TimedBool(0.5);
 		chirping = new TimedBool(0.15);
 
 		animation.add("sleep", [0, 1], 5, true);
@@ -110,13 +113,16 @@ class Bird extends FlxSprite
 		animation.add("boost", [12], 5, false);
 		fsm = new FSM();
 
+		fsm.addState(MoveState.Sleep, sleepEnter);
 		fsm.addState(MoveState.Idle, idleEnter);
 		fsm.addState(MoveState.Glide, glideEnter, glideUpdate, glideLeave);
 		fsm.addState(MoveState.Flap, flapEnter, flapUpdate);
 		fsm.addState(MoveState.Fall, fallEnter, fallUpdate);
 		fsm.addState(MoveState.AirDash, airDashEnter, airDashUpdate, airDashLeave);
 		fsm.addState(MoveState.AirBoost, airBoostEnter, airDashUpdate);
-		fsm.switchState(MoveState.Idle);
+		fsm.switchState(MoveState.Sleep);
+
+		portalLine = new PortalLine();
 
 		control = true;
 		instance = this;
@@ -124,8 +130,13 @@ class Bird extends FlxSprite
 
 	override public function update(elapsed:Float):Void
 	{
+		portalLine.x = x;
+		portalLine.y = y + 4;
+		portalLine.angle = Math.atan((PlayState.instance.nextPortalPos.y - y)/(FlxG.width - x)) * 180.0/Math.PI;
+
 		if (!control)
 		{
+			animation.update(elapsed);
 			return;
 		}
 		this.elapsed = elapsed;
@@ -133,9 +144,9 @@ class Bird extends FlxSprite
 		dashCooldown.update(elapsed);
 		dashing.update(elapsed);
 		/*if (!dashCooldown.soft)
-		{
-			onGround.hard = isTouching(FlxDirectionFlags.FLOOR);
-			onGround.update(elapsed);
+			{
+				onGround.hard = isTouching(FlxDirectionFlags.FLOOR);
+				onGround.update(elapsed);
 		}*/
 		jumping.update(elapsed);
 		jumpCooldown.update(elapsed);
@@ -145,14 +156,14 @@ class Bird extends FlxSprite
 
 		if (Input.control.keys.get("action").justPressed)
 		{
-			//G.playSound("birdtype", 2);
+			G.playSound("short_chirp", 2);
 			/*if (animation.frameIndex < 25)
 				{
 					animation.frameIndex += 25;
 			}*/
 			/*TrailEmitter.instance.x = x + 1;
-			TrailEmitter.instance.y = y;
-			TrailEmitter.instance.poof();*/
+				TrailEmitter.instance.y = y;
+				TrailEmitter.instance.poof(); */
 
 			chirping.trigger();
 		}
@@ -166,26 +177,33 @@ class Bird extends FlxSprite
 		}*/
 
 		// prevent flooring below floor
-		if(y > FlxG.height - 16)
+		if (y > FlxG.height - 16)
 		{
 			velocity.y -= edgeDraft * elapsed;
-			if(velocity.y < -50)
+			if (velocity.y < -50)
 			{
 				velocity.y = -50;
 			}
 		}
-		if(y < 0)
+		if (y < 0)
 		{
 			velocity.y += edgeDraft * elapsed;
-			if(velocity.y > 50)
+			if (velocity.y > 50)
 			{
 				velocity.y = 50;
 			}
 		}
 
-		//scale.x = 1.0 + 0.1 * PlayState.instance.speedRatio;
+		// scale.x = 1.0 + 0.1 * PlayState.instance.speedRatio;
 		scale.y = 1.0 - 0.1 * PlayState.instance.speedRatio;
+	}
 
+	private function sleepEnter()
+	{
+		offset.y = groundYOffset;
+
+		followOffset = 3;
+		animation.play("sleep");
 	}
 
 	private function idleEnter()
@@ -194,11 +212,14 @@ class Bird extends FlxSprite
 
 		followOffset = 3;
 		animation.play("sleep");
-		new FlxTimer().start(1, (timer:FlxTimer)->{
+		new FlxTimer().start(1, (timer:FlxTimer) ->
+		{
 			animation.play("surprise");
-			timer.start(1, (timer:FlxTimer)->{
+			timer.start(1, (timer:FlxTimer) ->
+			{
 				animation.play("stand");
-				timer.start(1, (timer:FlxTimer)->{
+				timer.start(1, (timer:FlxTimer) ->
+				{
 					fsm.switchState(MoveState.Glide);
 				});
 			});
@@ -213,7 +234,7 @@ class Bird extends FlxSprite
 		jump(flapStrength, flapVariable);
 		currentFlapStrength = flapStrength;
 		acceleration.y = glideGravity;
-		//FlxG.sound.play(AssetPaths.flap__ogg);
+		G.playSound("flap", 1, 1.75);
 	}
 
 	private function fallEnter()
@@ -221,9 +242,9 @@ class Bird extends FlxSprite
 		drag.y = airDrag;
 		followOffset = 2;
 		velocity.y = 0;
-		acceleration.y = fallGravity;
+		//acceleration.y = fallGravity;
 		animation.play("fall");
-		//FlxG.sound.play(AssetPaths.flap__ogg);
+		G.playSound("flap", 1, 1.75);
 	}
 
 	private function glideEnter()
@@ -231,9 +252,8 @@ class Bird extends FlxSprite
 		drag.y = airDrag;
 		followOffset = 2;
 		acceleration.y = glideGravity;
-		if(Math.abs(velocity.x) > maxSpeed)
+		if (Math.abs(velocity.x) > maxSpeed)
 		{
-
 			animation.play("hardglide");
 		}
 		else
@@ -357,7 +377,7 @@ class Bird extends FlxSprite
 		// FlxG.sound.play(AssetPaths.dash__ogg);
 		DustEmitter.instance.x = x;
 		DustEmitter.instance.y = y + 5;
-		
+
 		delayedDash = !Input.control.anyJustPressed;
 
 		var diagonal:Bool = Input.control.anyLeftRight;
@@ -442,7 +462,7 @@ class Bird extends FlxSprite
 		if (canDash())
 		{
 			fsm.switchState(MoveState.AirDash);
-			//onGround.hard = false;
+			// onGround.hard = false;
 			return;
 		}
 		if (!jumping.soft)
@@ -468,6 +488,10 @@ class Bird extends FlxSprite
 
 	private function glideUpdate()
 	{
+		if (Input.control.up.pressed)
+		{
+			velocity.y -= elapsed * floatStrength;
+		}
 
 		if (canDash())
 		{
@@ -483,16 +507,16 @@ class Bird extends FlxSprite
 			fsm.switchState(MoveState.Fall);
 			return;
 		}
-		if(Math.abs(velocity.x) + 0.01 > maxSpeed)
+		if (Math.abs(velocity.x) + 0.01 > maxSpeed)
 		{
-			if(animation.name == "glide")
+			if (animation.name == "glide")
 			{
 				animation.play("hardglide");
 			}
 		}
 		else
 		{
-			if(animation.name == "hardglide")
+			if (animation.name == "hardglide")
 			{
 				animation.play("glide");
 			}
@@ -502,6 +526,10 @@ class Bird extends FlxSprite
 
 	private function fallUpdate()
 	{
+		if (Input.control.down.pressed)
+		{
+			velocity.y += elapsed * diveStrength;
+		}
 
 		if (canDash())
 		{
@@ -553,7 +581,6 @@ class Bird extends FlxSprite
 		return attemptDash;
 	}
 
-
 	private function move(p_move_speed:Float)
 	{
 		DustEmitter.instance.x = x;
@@ -563,14 +590,14 @@ class Bird extends FlxSprite
 		if (Input.control.pressedBothX) {}
 		else if (Input.control.left.pressed)
 		{
-			if(velocity.x > -maxSpeed)
+			if (velocity.x > -maxSpeed)
 			{
 				velocity.x -= elapsed * p_move_speed;
 			}
 		}
 		else if (Input.control.right.pressed)
 		{
-			if(velocity.x < maxSpeed)
+			if (velocity.x < maxSpeed)
 			{
 				velocity.x += elapsed * p_move_speed;
 			}
@@ -604,12 +631,12 @@ class Bird extends FlxSprite
 			DustEmitter.instance.y = y;
 			if (Input.control.left.justPressedDelayed)
 			{
-				//velocity.x -= airBoost;
+				// velocity.x -= airBoost;
 				DustEmitter.instance.leftPoof();
 			}
 			else if (Input.control.right.justPressedDelayed)
 			{
-				//velocity.x += airBoost;
+				// velocity.x += airBoost;
 				DustEmitter.instance.rightPoof();
 			}
 			DustEmitter.instance.downPoof();

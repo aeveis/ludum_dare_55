@@ -26,7 +26,7 @@ class TextNode
 	{
 		texts = new Array<String>();
 		portraits = new Array<String>();
-		portraits.push("light");
+		portraits.push("wiz");
 		link = p_link;
 
 		if (_nodes == null)
@@ -72,14 +72,6 @@ class TextConstants
 	public var debug:TextNode = new TextNode();
 	public var error:TextNode = new TextNode();
 	public var intro:TextNode = new TextNode();
-	public var flying:TextNode = new TextNode();
-	public var resting:TextNode = new TextNode();
-	public var flyingtop:TextNode = new TextNode();
-	public var flipping:TextNode = new TextNode();
-	public var hi:TextNode = new TextNode();
-	public var sandbox:TextNode = new TextNode();
-	public var startparcel:TextNode = new TextNode();
-	public var careful:TextNode = new TextNode();
 	public var ending:TextNode = new TextNode();
 
 	public function new()
@@ -87,38 +79,32 @@ class TextConstants
 		debug.texts = ["Debug Text. <wave>This is the debug text.</wave>"];
 		error.texts = ["Text ID not found. :("];
 		intro.texts = [
-			"<color=cyan>Flipping Finches</color> By aeveis (dan lin) <lime>Ludum Dare 53: Delivery</lime>",
-			"[ <color=yellow>Arrow keys</color> to move ]    [ <color=yellow>Space or Up</color> to flap/jump ]\n[ <color=yellow>X</color> to Interact ]"
+			"<color=cyan>Slow Phoenix</color> By aeveis (dan lin) <lime>Ludum Dare 55: Summoning</lime>",
+			"[ <color=yellow>Arrow keys</color> to move ]\n[ <color=yellow>X</color> to Dash ]",
+			"I summon you, the great Phoenix! This will be my ultimate attack!",
+			"<shake>SUMMON!!!</shake>",
+			"...",
+			"You better not be sleeping!!! <shake>WAKE UP!</shake>",
 		];
-		flying.texts = [
-			"You can press <yellow>[Space]</yellow> or <yellow>[Up]</yellow> to fly. If you hold it you can even glide!",
-			"That's something you know already, right?"
+		intro.portraits = [
+			"wiz",
+			"wiz",
+			"wiz",
+			"wiz",
+			"bird",
+			"wiz",
 		];
-		resting.texts = [
-			"I've heard you have a history of doing lots of flips...",
-			"Be careful with those parcels please!!"
+		ending.texts = [
+			"I summon you, the great Phoenix! This will be my ultimate attack!",
+			"<red> !FOOSH! </red>",
+			"Yes! It only took 123123 minutes to summon Phoenix!",
+			"Thanks for playing! Press R to replay the game."
 		];
-		flyingtop.texts = ["Hello. Don't be breaking this latest parcel now you hear?"];
-		flipping.texts = [
-			"Flip master! I know you can flip <yellow>turning in the air</yellow>...",
-			"But I didn't think <yellow>< ^ ></yellow> or <yellow>> ^ <</yellow> would work either! Thank you!"
-		];
-		hi.texts = [
-			"Hi. we have a package ready for you higher up.",
-			"Please don't destroy this one..."
-		];
-		sandbox.texts = [
-			"I just want to fly around... do flips and such.",
-			"Though I've heard with a parcel things are a bit different."
-		];
-		startparcel.texts = [
-			"Hey there. This parcel has been prepared and wrapped tightly to prevent damage.",
-			"We'll like you to fly all the way to the top with it. You'll know it when you see it.",
-			"What's in the parcel? That's confidential!"
-		];
-		careful.texts = [
-			"Given your and others' history with parcels we have tape scattered around.",
-			"Yes, tape. You can repair your package with it."
+		ending.portraits = [
+			"wiz",
+			"birdah",
+			"wiz",
+			"wiz",
 		];
 	}
 }

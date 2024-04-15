@@ -137,7 +137,7 @@ class UIText extends UIContainer
 		textSprite.skipTyping();
 	}
 
-	public function setTypingSound(soundName:String, soundRandomCount:Int = 0, volume:Float = 0.5)
+	public function setTypingSound(soundName:String, soundRandomCount:Int = 0, volume:Float = 0.25)
 	{
 		textSprite.setTypingSound(soundName, soundRandomCount, volume);
 	}

@@ -3,21 +3,74 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "level0.tmx",
     "expandedProjectPaths": [
+        "."
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
-        "C:/Users/Dan Lin/Dropbox/prototypes/ludum_dare55/LD55/assets/data/level0.tmx": {
+        "C:/Users/Dan Lin/Dropbox/prototypes/diacombs/LD48/assets/data/diacomb.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Dan Lin/Dropbox/prototypes/diacombs/LD48/assets/data/level0.tmx": {
             "scale": 2,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 186,
-                "y": 81.5
+                "x": 885,
+                "y": 1233
             }
+        },
+        "C:/Users/Dan Lin/Dropbox/prototypes/diacombs/LD48/assets/data/level0.tmx#door": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Dan Lin/Dropbox/prototypes/diacombs/LD48/assets/data/level0.tmx#grid": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Dan Lin/Dropbox/prototypes/diacombs/LD48/assets/data/level0.tmx#largebell": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Dan Lin/Dropbox/prototypes/diacombs/LD48/assets/data/level0.tmx#pedestal": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Dan Lin/Dropbox/prototypes/diacombs/LD48/assets/data/matchers.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Dan Lin/Dropbox/prototypes/diacombs/LD48/assets/data/npc.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Dan Lin/Dropbox/prototypes/diacombs/LD48/assets/data/tiles.tsx": {
+            "scaleInDock": 1
+        },
+        "crate.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "fuelbee.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "level0.tmx": {
+            "scale": 3,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 157.66666666666666,
+                "y": 93.66666666666666
+            }
+        },
+        "portal0.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "portal1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "portal2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "tiles.tsx": {
+            "scaleInDock": 1
         }
     },
     "last.imagePath": "C:/Users/Dan Lin/Dropbox/prototypes/ludum_dare55/LD55/assets/images",
@@ -27,15 +80,25 @@
     "map.tileWidth": 16,
     "map.width": 20,
     "openFiles": [
+        "level0.tmx",
+        "crate.tsx",
+        "portal0.tsx",
+        "portal1.tsx",
+        "portal2.tsx"
     ],
     "project": "ld55.tiled-project",
     "recentFiles": [
-        "fuelbee.tsx",
-        "C:/Users/Dan Lin/Dropbox/prototypes/ludum_dare55/LD55/assets/data/level0.tmx"
+        "level0.tmx",
+        "C:/Users/Dan Lin/Dropbox/prototypes/diacombs/LD48/assets/data/level0.tmx",
+        "portal2.tsx",
+        "portal1.tsx",
+        "portal0.tsx",
+        "crate.tsx",
+        "fuelbee.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 16,
-        "width": 16
+        "height": 100,
+        "width": 20
     }
 }

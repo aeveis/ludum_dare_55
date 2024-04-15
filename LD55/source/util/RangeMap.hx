@@ -21,7 +21,6 @@ class RangeMap <V>
         if(!keys.contains(key))
         {
             keys.push(key);
-            keys.sort((x,y)->{return Math.floor(x*1000-y*1000);});
         }
         values[keys.indexOf(key)] = value;
     }
@@ -75,6 +74,18 @@ class RangeMap <V>
         return match;
     }
 
+    public function getKey(value:V):Float
+    {
+        for(i in 0...values.length)
+        {
+            if(values[i] == value)
+            {
+                return keys[i];
+            }
+        }
+        return -999;
+    }
+
     public function getAllLess(key:Float, range:Float = 1.0):Array<V>
     {
         var match = new Array<V>();
@@ -111,7 +122,7 @@ class RangeMap <V>
             {
                 if(keys[i] <= key && keys[i] + range >= key)
                 {
-                    return  true;
+                    return true;
                 }
             }
             return false;

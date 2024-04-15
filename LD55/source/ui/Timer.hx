@@ -13,6 +13,11 @@ class Timer extends UIContainer
 	var timeText:UIBitmapText;
 	var count:Float = 0;
 	var start:Bool = false;
+	public var timeString(get, null):String;
+	public function get_timeString()
+	{
+		return timeText.text;
+	}
 
 	public function new()
 	{

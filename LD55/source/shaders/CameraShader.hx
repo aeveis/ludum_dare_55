@@ -16,7 +16,8 @@ class CameraShader extends FlxShader
 		
 		uniform float time;
 		uniform float ratio;
-		
+        uniform float endRatio;
+        
         // Some useful functions
         vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
         vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -99,13 +100,16 @@ class CameraShader extends FlxShader
 			float xpixel = 20.0 / openfl_TextureSize.x;
 			float ypixel = 20.0 / openfl_TextureSize.y;
 
-			float warp = mix(0.0, xpixel * ratio * snoise(vec2(uv.x/20.0 + time + 1231.0, uv.y * 40.0)), 1.0 - min(uv.x + xpixel * 2.0, 1.0));
+            float warpRatio = ratio / 2.0;
+            warpRatio *= warpRatio;
+            //warpRatio *= warpRatio;
+			float warp = mix(0.0, xpixel * warpRatio * snoise(vec2(uv.x/20.0 + time + 1231.0, uv.y * 40.0)), 1.0 - min(uv.x + xpixel * 2.0, 1.0));
 			uv.x = uv.x + warp;
 
 			float speedlines = snoise(vec2(uv.x/2.0 + time, uv.y * 70.0)) * snoise(vec2(uv.x/2.0 + time, uv.y * 6.0));
-			speedlines = step(0.5, ratio * speedlines);
+			speedlines = step(mix(0.5, 0.1, endRatio), ratio * speedlines);
 			gl_FragColor = texture2D(bitmap, uv);
-			gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.841, 0.791, 0.536), speedlines);
+			gl_FragColor.rgb = mix(gl_FragColor.rgb, mix(vec3(0.841, 0.791, 0.536), vec3(0.588, 0.345, 0.737), endRatio), speedlines);
 		}
 	')
 	public function new()

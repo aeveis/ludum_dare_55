@@ -47,11 +47,11 @@ class TextBox extends UIImage
 
 	public function new(p_bgImage:FlxGraphicAsset, p_placement:UIPlacement, p_size:UISize, ?p_textZoom:Float, ?p_parent:UIParent)
 	{
-		super(p_bgImage, p_placement, p_size, UIPlacement.Left, UILayout.sides(3), UILayout.sides(1), p_parent);
+		super(p_bgImage, p_placement, p_size, UIPlacement.Left, UILayout.sides(1), UILayout.sides(1), p_parent);
 		scrollFactor.set(0, 0);
 
-		charBox = new UIImage(null, UIPlacement.TopLeft, UISize.Size(36, 36), UIPlacement.Center);
-		textBox = new UIContainer(UIPlacement.Pos(charBox.width + 6, 1), UISize.Size(width - charBox.width - 35, height), UIPlacement.TopLeft, UILayout.top(6));
+		charBox = new UIImage(null, UIPlacement.TopLeft, UISize.Size(18, 18), UIPlacement.Center);
+		textBox = new UIContainer(UIPlacement.Pos(charBox.width + 6, 1), UISize.Size(width - charBox.width - 35, height), UIPlacement.TopLeft, UILayout.top(3));
 
 		if (p_textZoom == _null)
 			p_textZoom = 1;
@@ -66,8 +66,10 @@ class TextBox extends UIImage
 		charIcon = new Portrait();
 		charBox.add(charIcon);
 
-		text = new UIText(true, FlxBitmapFont.fromAngelCode(AssetPaths.Easycombs_0__png, AssetPaths.Easycombs__fnt));
-		text.tweakShaderLineOffset(0);
+		//var font:FlxBitmapFont = FlxBitmapFont.fromAngelCode(AssetPaths.Easycombs_0__png, AssetPaths.Easycombs__fnt);
+		//font.spaceWidth = 8;
+		text = new UIText(true);
+		//text.tweakShaderLineOffset(0);
 		text.setParent(UIParent.Camera(textCam));
 		text.setMaxWidth(textBox.width * textZoomRatio);
 		text.textSprite.cameras = [textCam];

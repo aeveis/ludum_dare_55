@@ -85,28 +85,11 @@ class G
 		soundPlaying.set(pname, false);
 	}
 
-	public static var loopedSounds:Map<String, FlxSound> = null;
-
 	public static function loadLoopedSound(pname:String, volume:Float = 1):FlxSound
 	{
-		if (loopedSounds == null)
-		{
-			loopedSounds = new Map<String, FlxSound>();
-		}
-
-		if(loopedSounds.get(pname) == null)
-		{
-			var sound:FlxSound = new FlxSound();
-			sound.loadEmbedded(pname, true);
-			sound.play();
-			sound.pause();
-			FlxG.sound.defaultSoundGroup.add(sound);
-			loopedSounds.set(pname, sound);
-			return sound;
-		}
-		else 
-		{
-			return loopedSounds.get(pname);
-		}
+		var sound:FlxSound = FlxG.sound.load(pname, volume, true);
+		sound.play();
+		sound.pause();
+		return sound;
 	}
 }
