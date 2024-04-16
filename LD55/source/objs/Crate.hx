@@ -27,6 +27,9 @@ class Crate extends Object
 			{
 				PlayState.instance.crateRanges.get(x).dead = true;
 			}
+			DustEmitter.instance.x = x;
+			DustEmitter.instance.y = y;
+			DustEmitter.instance.colorPoof(0xd99e62);
 			kill();
 		});
 	}

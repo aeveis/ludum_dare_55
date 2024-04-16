@@ -49,8 +49,11 @@ class FuelBee extends Object
 			{
 				PlayState.instance.beeRanges.get(x).dead = true;
 			}
+			DustEmitter.instance.x = x - 8;
+			DustEmitter.instance.y = y + 3;
+			DustEmitter.instance.fireflyPoof(beeType);
+			kill();
 		});
-		kill();
 	}
 
 	public function spawn(px:Float, py:Float, btype:Int)

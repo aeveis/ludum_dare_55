@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="20" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="561">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="20" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="606">
  <tileset firstgid="1" source="fuelbee.tsx"/>
  <tileset firstgid="13" source="tiles.tsx"/>
  <tileset firstgid="15" source="crate.tsx"/>
@@ -24,13 +24,13 @@
 </data>
  </layer>
  <objectgroup id="2" name="entities" offsetx="2.93416" offsety="-1.17367">
-  <object id="1" name="fuelbee" gid="1" x="10.9902" y="29.7527" width="16" height="16"/>
-  <object id="2" name="fuelbee" gid="1" x="13.4194" y="37.5853" width="16" height="16"/>
+  <object id="1" name="fuelbee" gid="1" x="10.2629" y="75.7527" width="16" height="16"/>
+  <object id="2" name="fuelbee" gid="1" x="12.8739" y="75.9489" width="16" height="16"/>
   <object id="3" name="fuelbee" gid="1" x="27.8221" y="106.111" width="16" height="16"/>
   <object id="4" name="fuelbee" gid="1" x="23.1274" y="61.9942" width="16" height="16"/>
   <object id="5" name="fuelbee" gid="1" x="25.46" y="69.3716" width="16" height="16"/>
-  <object id="6" name="fuelbee" gid="1" x="17.397" y="45.4641" width="16" height="16"/>
-  <object id="7" name="fuelbee" gid="1" x="21.1141" y="55.4178" width="16" height="16"/>
+  <object id="6" name="fuelbee" gid="1" x="16.1243" y="72.555" width="16" height="16"/>
+  <object id="7" name="fuelbee" gid="1" x="18.7505" y="59.7814" width="16" height="16"/>
   <object id="8" name="fuelbee" gid="1" x="33.0244" y="82.4451" width="16" height="16"/>
   <object id="9" name="fuelbee" gid="1" x="39.8927" y="96.4961" width="16" height="16"/>
   <object id="10" name="fuelbee" gid="1" x="49.3374" y="111.83" width="16" height="16"/>
@@ -56,8 +56,8 @@
   <object id="30" name="fuelbee" gid="1" x="95.9353" y="71.4689" width="16" height="16"/>
   <object id="31" name="fuelbee" gid="1" x="102.733" y="49.1736" width="16" height="16"/>
   <object id="32" name="fuelbee" gid="1" x="105.733" y="32.1736" width="16" height="16"/>
-  <object id="33" name="fuelbee" gid="1" x="110.066" y="17.507" width="16" height="16"/>
-  <object id="39" name="fuelbee" gid="1" x="123.066" y="16.507" width="16" height="16"/>
+  <object id="33" name="fuelbee" gid="1" x="110.248" y="33.6888" width="16" height="16"/>
+  <object id="39" name="fuelbee" gid="1" x="123.793" y="36.8706" width="16" height="16"/>
   <object id="40" name="fuelbee" gid="1" x="130.066" y="23.507" width="16" height="16"/>
   <object id="41" name="fuelbee" gid="1" x="112.399" y="159.84" width="16" height="16"/>
   <object id="43" name="fuelbee" gid="1" x="126.4" y="177.173" width="16" height="16"/>
@@ -295,6 +295,32 @@
     <property name="type" value="nest"/>
    </properties>
   </object>
-  <object id="560" name="portal2" gid="18" x="6.73251" y="125.507" width="32" height="80"/>
+  <object id="561" name="crate" gid="15" x="127.399" y="130.757" width="16" height="16"/>
+  <object id="562" name="crate" gid="15" x="105.149" y="119.257" width="16" height="16"/>
+  <object id="563" name="crate" gid="15" x="110.649" y="123.757" width="16" height="16"/>
+  <object id="564" name="crate" gid="15" x="115.149" y="127.757" width="16" height="16"/>
+  <object id="565" name="crate" gid="15" x="119.149" y="137.757" width="16" height="16"/>
+  <object id="566" name="crate" gid="15" x="97.6491" y="125.173" width="16" height="16"/>
+  <object id="567" name="crate" gid="15" x="134.899" y="141.257" width="16" height="16"/>
+  <object id="568" name="crate" gid="15" x="137.399" y="132.007" width="16" height="16"/>
+  <object id="569" name="crate" gid="15" x="138.899" y="121.257" width="16" height="16"/>
+  <object id="570" name="crate" gid="15" x="141.149" y="111.757" width="16" height="16"/>
+  <object id="588" name="crate" gid="15" x="132.987" y="62.7987" width="16" height="16"/>
+  <object id="589" name="crate" gid="15" x="117.237" y="59.7987" width="16" height="16"/>
+  <object id="590" name="crate" gid="15" x="121.737" y="53.7987" width="16" height="16"/>
+  <object id="591" name="crate" gid="15" x="131.737" y="52.0487" width="16" height="16"/>
+  <object id="592" name="crate" gid="15" x="122.737" y="67.7987" width="16" height="16"/>
+  <object id="593" name="crate" gid="15" x="102.487" y="67.2987" width="16" height="16"/>
+  <object id="594" name="crate" gid="15" x="143.737" y="72.7987" width="16" height="16"/>
+  <object id="595" name="crate" gid="15" x="158.487" y="55.7987" width="16" height="16"/>
+  <object id="596" name="crate" gid="15" x="177.237" y="66.0487" width="16" height="16"/>
+  <object id="597" name="crate" gid="15" x="146.145" y="71.0487" width="16" height="16"/>
+  <object id="598" name="crate" gid="15" x="160.895" y="54.0487" width="16" height="16"/>
+  <object id="599" name="crate" gid="15" x="176.145" y="76.2987" width="16" height="16"/>
+  <object id="600" name="crate" gid="15" x="179.645" y="64.2987" width="16" height="16"/>
+  <object id="601" name="crate" gid="15" x="153.145" y="70.7154" width="16" height="16"/>
+  <object id="602" name="crate" gid="15" x="167.895" y="53.7154" width="16" height="16"/>
+  <object id="603" name="crate" gid="15" x="183.145" y="75.9654" width="16" height="16"/>
+  <object id="604" name="crate" gid="15" x="186.645" y="63.9654" width="16" height="16"/>
  </objectgroup>
 </map>

@@ -40,15 +40,15 @@ class Portal extends Object
 		switch(portalType)
 		{
 			case SMALL:
-				G.playSound("portal");
+				G.playSound("portal", 0.6);
 				DustEmitter.instance.colorPoof(0x9658bc);
 			case MEDIUM:
-				G.playSound("portal");
+				G.playSound("portal", 0.6);
 				DustEmitter.instance.colorPoof(0x9658bc);
 				DustEmitter.instance.y += 16;
 				DustEmitter.instance.colorPoof(0x9658bc);
 			case LARGE:
-				G.playSound("portal");
+				G.playSound("portal", 0.8);
 				DustEmitter.instance.x += 8;
 				DustEmitter.instance.colorPoof(0x9658bc);
 				DustEmitter.instance.y += 16;

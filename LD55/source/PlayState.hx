@@ -70,6 +70,7 @@ class PlayState extends FlxState
 	public var despawnOffset:Float = 6.0;
 
 	public var sfxSpeed:FlxSound;
+	public var sfxFlame:FlxSound;
 
 	public var helpText:UIText;
 	public var helpRatio:Float = 1.0;
@@ -228,6 +229,7 @@ class PlayState extends FlxState
 		}
 
 		sfxSpeed = G.loadLoopedSound(AssetPaths.speed_loop__ogg, 0.0);
+		sfxFlame = G.loadLoopedSound(AssetPaths.fire__ogg, 0.0);
 		fade(0.3, true, fadeOnComplete);
 	}
 
@@ -724,10 +726,15 @@ class PlayState extends FlxState
 			if(trigger.index == 2)
 			{
 				gameState = FOOSH;
+				FlxG.sound.music.fadeOut(1,0.1);
+				sfxFlame.resume();
+				sfxFlame.volume = 1;
 			}
 			if(trigger.index == 3)
 			{
 				gameState = DONE;
+				FlxG.sound.music.fadeIn(1,0.4);
+				sfxFlame.fadeOut(0.5);
 			}
 		}
 
@@ -813,7 +820,7 @@ class PlayState extends FlxState
 								trigger.visible = false;
 								helpText.startTyping(); 
 								gameState = START;
-								FlxG.sound.music.fadeIn(1, 0, 0.5);
+								FlxG.sound.music.fadeIn(1, 0, 0.4);
 								timer.startTimer();
 							case "ending":
 								trigger.visible = false;

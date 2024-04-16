@@ -153,7 +153,7 @@ class TypeTextShader extends FlxShader
 				float anim = wave * float(anim3.x == 1.0) + shaky * float(anim3.x == 2.0);
 				animMask += anim * sectionMask(uv, anim3.y, anim3.z);
 			}
-            uv.y += animMask * (1.0 - fade);
+            uv.y += max(0.0, animMask) * (1.0 - fade);
 
 			vec4 col = texture2D(bitmap, uv);
 

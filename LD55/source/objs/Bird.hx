@@ -244,7 +244,7 @@ class Bird extends FlxSprite
 		velocity.y = 0;
 		//acceleration.y = fallGravity;
 		animation.play("fall");
-		G.playSound("flap", 1, 1.75);
+		G.playSound("flap", 1, 2.5);
 	}
 
 	private function glideEnter()

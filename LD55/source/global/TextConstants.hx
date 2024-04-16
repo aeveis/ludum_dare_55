@@ -79,7 +79,7 @@ class TextConstants
 		debug.texts = ["Debug Text. <wave>This is the debug text.</wave>"];
 		error.texts = ["Text ID not found. :("];
 		intro.texts = [
-			"<color=cyan>Slow Phoenix</color> By aeveis (dan lin) <lime>Ludum Dare 55: Summoning</lime>",
+			"<color=cyan>Phoenix Delay</color> By aeveis (dan lin) <lime>Ludum Dare 55: Summoning</lime>",
 			"[ <color=yellow>Arrow keys</color> to move ]\n[ <color=yellow>X</color> to Dash ]",
 			"I summon you, the great Phoenix! This will be my ultimate attack!",
 			"<shake>SUMMON!!!</shake>",
